@@ -58,6 +58,26 @@ create table lessons (
 
 Create a test user in Supabase Auth and insert lessons linked to that user.
 
+### Seeding Data
+1. Create a test user via the Login page or Supabase Dashboard.
+2. Copy that user’s `id` from Supabase → Authentication → Users.
+3. Replace `<PASTE-YOUR-USER-ID-HERE>` in `seed.sql` with the actual ID.
+4. Run the script in Supabase SQL Editor.
+
+```
+-- Replace with your test user's actual UUID from Supabase Auth
+-- Find this under Supabase → Authentication → Users
+
+insert into lessons (student_id, title, date, completed)
+values
+  ('<PASTE-YOUR-USER-ID-HERE>', 'Math Lesson 1', now() + interval '1 day', false),
+  ('<PASTE-YOUR-USER-ID-HERE>', 'Science Lesson 1', now() + interval '2 days', false),
+  ('<PASTE-YOUR-USER-ID-HERE>', 'History Lesson 1', now() + interval '3 days', false),
+  ('<PASTE-YOUR-USER-ID-HERE>', 'English Lesson 1', now() + interval '4 days', false);
+
+```
+
+
 ### 5. Run locally
 ```bash
 npm run dev
