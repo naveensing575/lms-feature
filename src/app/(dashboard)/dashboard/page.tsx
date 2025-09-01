@@ -11,15 +11,24 @@ export default async function DashboardPage() {
     error: userError,
   } = await supabase.auth.getUser();
 
+  // 🔎 Debug logs
+  console.log("[Dashboard] user:", user);
+  console.log("[Dashboard] userError:", userError);
+
   if (userError || !user) {
+    console.log("[Dashboard] Redirecting to /login because user is null or error exists");
     redirect("/login");
   }
 
-  const { data: lessons } = await supabase
+  const { data: lessons, error: lessonsError } = await supabase
     .from("lessons")
     .select("*")
     .eq("student_id", user.id)
     .order("date", { ascending: true });
+
+  // 🔎 Debug logs
+  console.log("[Dashboard] lessons:", lessons);
+  console.log("[Dashboard] lessonsError:", lessonsError);
 
   return (
     <div className="flex items-center justify-center h-screen">
