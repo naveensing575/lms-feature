@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,18 +14,20 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
+    setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setErrorMsg(error.message);
+      setLoading(false);
     } else {
       router.push("/dashboard");
-      console.log('dashboard is here')
     }
   };
 
@@ -43,22 +45,25 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
-
             <Input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
-
-            {errorMsg && (
-              <p className="text-destructive text-sm">{errorMsg}</p>
-            )}
-
-            <Button type="submit" className="w-full">
-              Login
+            {errorMsg && <p className="text-destructive text-sm">{errorMsg}</p>}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  Logging in...
+                </span>
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
         </CardContent>
