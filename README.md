@@ -100,8 +100,8 @@ Visit [http://localhost:3000](http://localhost:3000).
 ## ⚖️ Tradeoffs & Improvements
 - ✅ Focused on core auth + lessons flow  
 - ✅ Clear structure over feature completeness  
-- ⚠️ No unit tests or loading skeletons (would add with more time)  
-- ⚠️ Lesson completion only supports a toggle, no undo history  
+- ⚠️ No unit tests(would add with more time)  
+- ⚠️ Lesson completion only supports a toggle, no undo history
 - ⚠️ Would use `middleware.ts` for global route protection in production  
 
 ---
@@ -125,6 +125,6 @@ src/
 
 ---
 
-## 🙋 Author Notes
+## Notes
 This implementation balances **clarity, security, and maintainability** within a limited time frame.  
 With more time, I would add tests, middleware auth enforcement, CI/CD, and more robust error boundaries.
