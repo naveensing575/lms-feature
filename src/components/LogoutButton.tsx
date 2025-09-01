@@ -15,7 +15,7 @@ export default function LogoutButton() {
 
   return (
     <Button
-      variant="outline"
+      variant="destructive"
       onClick={handleLogout}
     >
       Logout

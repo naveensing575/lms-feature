@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("sb-access-token")?.value;
+    console.log(req.cookies.getAll())
 
   // Protect all dashboard routes
   if (!token && req.nextUrl.pathname.startsWith("/dashboard")) {

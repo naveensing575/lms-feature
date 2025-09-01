@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,11 +29,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <div className="min-h-screen flex flex-col">
-          <header className="w-full border-b bg-primary text-primary-foreground px-6 py-4">
-            <h1 className="text-xl font-semibold">Contour LMS</h1>
-          </header>
+          <Navbar />
+
           <main className="flex-1 p-6">{children}</main>
-          <footer className="w-full border-t bg-card px-6 py-4 text-sm text-muted-foreground">
+
+          <footer className="w-full border-t bg-card px-6 py-4 text-sm text-muted-foreground text-center">
             © {new Date().getFullYear()} Contour Education
           </footer>
         </div>
