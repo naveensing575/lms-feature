@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { supabaseBrowser } from "@/lib/supabaseBrowser";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
+  const supabase = supabaseBrowser();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -14,10 +19,7 @@ export default function LoginPage() {
     e.preventDefault();
     setErrorMsg("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setErrorMsg(error.message);
@@ -28,39 +30,38 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-96"
-      >
-        <h1 className="text-2xl font-bold mb-6">Login</h1>
+      <Card className="w-[380px]">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl font-bold">Login</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border rounded p-2 mb-4"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border rounded p-2 mb-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+            {errorMsg && (
+              <p className="text-destructive text-sm">{errorMsg}</p>
+            )}
 
-        {errorMsg && <p className="text-red-500 text-sm mb-4">{errorMsg}</p>}
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700"
-        >
-          Login
-        </button>
-      </form>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
