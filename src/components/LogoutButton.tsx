@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 export default function LogoutButton() {
@@ -13,8 +13,11 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     setLoading(true);
-    await supabase.auth.signOut();
+
     router.replace("/login");
+
+    await supabase.auth.signOut();
+
     router.refresh();
   };
 
