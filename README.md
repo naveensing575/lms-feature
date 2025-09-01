@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Contour LMS Feature Demo
 
-## Getting Started
+A simplified LMS feature built with **Next.js (App Router)**, **TypeScript**, **Supabase**, and **shadcn/ui**.  
+The goal of this project is to demonstrate architecture choices, tradeoffs, and structure rather than shipping a production-ready app.
 
-First, run the development server:
+---
 
+## ✨ Features
+- 🔐 User login & logout with Supabase Auth
+- 📊 Protected dashboard for authenticated users
+- 📅 Fetch upcoming lessons from Supabase
+- ✅ Mark lessons as complete (with optimistic UI updates)
+- 🎨 Consistent UI with shadcn/ui and Tailwind v4 theme tokens
+
+---
+
+## 🛠️ Tech Stack
+- **Next.js 15** (App Router, Server/Client Components)
+- **TypeScript**
+- **Supabase** (Postgres + Auth)
+- **shadcn/ui** (Radix + Tailwind v4 tokens)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repo
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/lms-feature.git
+cd lms-feature
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Environment Variables
+Copy `.env.example` → `.env.local` and fill with your Supabase project values:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Database Setup
+Run the schema and seed data from `/src/db/` in your Supabase SQL Editor:
 
-## Learn More
+```sql
+-- lessons table
+create table lessons (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid references auth.users(id) on delete cascade,
+  title text not null,
+  date timestamptz not null,
+  completed boolean default false
+);
+```
 
-To learn more about Next.js, take a look at the following resources:
+Create a test user in Supabase Auth and insert lessons linked to that user.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 5. Run locally
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Visit [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏗️ Architecture Notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Route Groups**: `(auth)` for login, `(dashboard)` for protected pages → clear separation of public/private.  
+- **Supabase Clients**: split into `supabaseBrowser` and `supabaseServer` to respect client/server boundaries.  
+- **Server Components**: data fetching and auth checks run only on the server → secure, no API key leaks.  
+- **Client Components**: login form, logout, and lessons list are interactive, using `supabaseBrowser()`.  
+- **UI Layer**: shadcn/ui + Tailwind v4 tokens for consistent theme, avoiding inline one-offs.
+
+---
+
+## ⚖️ Tradeoffs & Improvements
+- ✅ Focused on core auth + lessons flow  
+- ✅ Clear structure over feature completeness  
+- ⚠️ No unit tests or loading skeletons (would add with more time)  
+- ⚠️ Lesson completion only supports a toggle, no undo history  
+- ⚠️ Would use `middleware.ts` for global route protection in production  
+
+---
+
+## 📂 Folder Structure
+```
+src/
+  app/
+    (auth)/login/page.tsx       # Login page (client)
+    (dashboard)/dashboard/page.tsx # Dashboard (server)
+    layout.tsx                   # Root layout
+    globals.css                  # Theme tokens
+  components/
+    LessonsList.tsx              # Client component for lessons
+    LogoutButton.tsx             # Logout handler
+    ui/                          # shadcn components
+  lib/
+    supabaseBrowser.ts
+    supabaseServer.ts
+```
+
+---
+
+## 🙋 Author Notes
+This implementation balances **clarity, security, and maintainability** within a limited time frame.  
+With more time, I would add tests, middleware auth enforcement, CI/CD, and more robust error boundaries.
